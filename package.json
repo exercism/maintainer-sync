@@ -1,0 +1,26 @@
+{
+  "name": "maintainer-sync",
+  "version": "0.0.1",
+  "description": "Manage a team via pull requests.",
+  "author": "Katrina Owen",
+  "license": "MIT",
+  "repository": "https://github.com/exercism/maintainer-sync.git",
+  "scripts": {
+    "start": "probot run ./index.js",
+    "test": "mocha && xo --extend probot"
+  },
+  "dependencies": {
+    "probot": "^0.7.2"
+  },
+  "devDependencies": {
+    "eslint-config-probot": ">=0.1.0",
+    "expect": "^1.20.2",
+    "localtunnel": "^1.8.2",
+    "mocha": "^3.2.0",
+    "xo": "^0.18.0"
+  },
+  "engines": {
+    "node": ">= 7.7.0",
+    "npm": ">= 4.0.0"
+  }
+}
