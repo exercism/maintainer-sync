@@ -1,5 +1,5 @@
 module.exports = (robot) => {
 
-  console.log("Yay, plugin loaded.");
+  console.log("Nothing to see here, move along folks.");
 
 };
