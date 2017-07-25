@@ -49,13 +49,11 @@ module.exports = (robot) => {
     let teamMembers = await findTeamMembers(team, context.github);
     let diff = composition(teamMembers, config.maintainers);
 
-    // TODO:
-    // The team membership endpoints are not yet available to GitHub Apps.
     diff.additions.forEach((username) => {
-      // TODO
+      return context.github.orgs.addTeamMembership({id: team.id, username: username, role: "member"});
     })
     diff.deletions.forEach((username) => {
-      // TODO
+      context.github.orgs.removeTeamMembership({id: team.id, username: username});
     })
   }
 
