@@ -9,23 +9,23 @@ describe('bot behavior', () => {
     expect(diff.deletions).toEqual([]);
   });
   it('with deletions', () => {
-    const teamMembers = ['alice', 'bob', 'charlie'];
-    const configMembers = ['alice', 'charlie'];
-    const diff = composition(teamMembers, configMembers);
+    const members = ['alice', 'bob', 'charlie'];
+    const maintainers = ['alice', 'charlie'];
+    const diff = composition(members, maintainers);
     expect(diff.additions).toEqual([]);
     expect(diff.deletions).toEqual(['bob']);
   });
   it('with additions', () => {
-    const teamMembers = ['alice', 'bob', 'charlie'];
-    const configMembers = ['alice', 'bob', 'charlie', 'dave'];
-    const diff = composition(teamMembers, configMembers);
+    const members = ['alice', 'bob', 'charlie'];
+    const maintainers = ['alice', 'bob', 'charlie', 'dave'];
+    const diff = composition(members, maintainers);
     expect(diff.additions).toEqual(['dave']);
     expect(diff.deletions).toEqual([]);
   });
   it('with all the changes', () => {
-    const teamMembers = ['alice', 'bob'];
-    const configMembers = ['charlie', 'dave'];
-    const diff = composition(teamMembers, configMembers);
+    const members = ['alice', 'bob'];
+    const maintainers = ['charlie', 'dave'];
+    const diff = composition(members, maintainers);
     expect(diff.additions).toEqual(['charlie', 'dave']);
     expect(diff.deletions).toEqual(['alice', 'bob']);
   });
