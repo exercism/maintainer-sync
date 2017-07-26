@@ -49,6 +49,18 @@ module.exports = robot => {
     const teamMembers = await findTeamMembers(team, context.github);
     const diff = composition(teamMembers, config.maintainers);
 
+    if (diff.alumni.length > 0) {
+      const opts = {
+        name: 'alumni',
+        owner: {
+          login: 'exercism'
+        }
+      };
+      const alumni = await findTeam(opts, context.github);
+      diff.alumni.forEach(username => {
+        return context.github.orgs.addTeamMembership({id: alumni.id, role: 'member', username});
+      });
+    }
     diff.additions.forEach(username => {
       return context.github.orgs.addTeamMembership({id: team.id, role: 'member', username});
     });

@@ -5,14 +5,23 @@ module.exports = function (members, maintainers) {
     });
   }
 
+  function isAlum(maintainer) {
+    return maintainer.alumnus;
+  }
+
+  function isCurrent(maintainer) {
+    return !maintainer.alumnus;
+  }
+
   function username(maintainer) {
     return maintainer.github_username;
   }
 
   const src = members;
-  const dst = maintainers.map(username);
+  const dst = maintainers.filter(isCurrent).map(username);
 
   return {
+    alumni: maintainers.filter(isAlum).map(username),
     additions: diff(dst, src),
     deletions: diff(src, dst)
   };
