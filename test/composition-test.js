@@ -1,5 +1,5 @@
 const expect = require('expect');
-const composition = require('./composition');
+const composition = require('../composition');
 
 function maintainer(username, alumnus) {
   return {github_username: username, alumnus}; // eslint-disable-line camelcase
