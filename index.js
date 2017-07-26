@@ -1,8 +1,7 @@
-const yaml = require('js-yaml');
 const composition = require('./composition');
 
 module.exports = robot => {
-  const CONFIG_FILENAME = '.github/maintainers.yml';
+  const CONFIG_FILENAME = 'config/maintainers.json';
 
   robot.on('pull_request.closed', sync);
 
@@ -97,7 +96,7 @@ module.exports = robot => {
 
     try {
       const res = await github.repos.getContent({owner, repo, path});
-      config = yaml.load(Buffer.from(res.data.content, 'base64').toString()) || {};
+      config = JSON.parse(Buffer.from(res.data.content, 'base64').toString()) || {};
       config.perform = true;
       return config;
     } catch (err) {
