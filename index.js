@@ -60,7 +60,7 @@ module.exports = robot => {
 
   async function findTeamMembers(team, github) {
     const members = [];
-    let res = await github.orgs.getTeamMembers({id: team.id, role: 'all', page: 1, per_page: 100});
+    let res = await github.orgs.getTeamMembers({id: team.id, role: 'all', page: 1, per_page: 100}); // eslint-disable-line camelcase
     for (;;) {
       for (const member of res.data) {
         members.push(member.login);
@@ -69,12 +69,12 @@ module.exports = robot => {
       if (!github.hasNextPage(res)) {
         return members;
       }
-      res = await context.github.getNextPage(res);
+      res = await context.github.getNextPage(res); // eslint-disable-line no-await-in-loop
     }
   }
 
   async function findTeam(repository, github) {
-    let res = await github.orgs.getTeams({org: repository.owner.login, page: 1, per_page: 100});
+    let res = await github.orgs.getTeams({org: repository.owner.login, page: 1, per_page: 100}); // eslint-disable-line camelcase
     for (;;) {
       for (const team of res.data) {
         if (team.name === repository.name) {
@@ -85,7 +85,7 @@ module.exports = robot => {
       if (!github.hasNextPage(res)) {
         return;
       }
-      res = await context.github.getNextPage(res);
+      res = await context.github.getNextPage(res); // eslint-disable-line no-await-in-loop
     }
   }
 
