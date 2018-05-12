@@ -70,7 +70,11 @@ module.exports = robot => {
     });
     if (diff.alumni.length > 0) {
       diff.alumni.forEach(async (username) => {
-        return context.github.orgs.addTeamMembership({id: alumni.id, role: 'member', username});
+        // Only add user to alumni team when they are not maintaining another project
+        let teams = await getTeamsForUser({ login: orgName, userLogin: [username] }, context.github)
+        if (teams.filter(t => t.node.name !== "alumni").length === 0) {
+          return context.github.orgs.addTeamMembership({id: alumni.id, role: 'member', username});
+        }
       });
     }
   }
