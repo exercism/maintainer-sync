@@ -8,4 +8,4 @@ This plugin requires these **Permissions & events** for the GitHub App:
   - [x] Check the box for **Pull Request** events
 - Organization Members - **Read & Write**
 - Single File - **Read-only**
-  - Path: `.github/maintainers.yml`
+  - Path: `config/maintainers.json`
