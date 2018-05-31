@@ -49,24 +49,54 @@ module.exports = robot => {
     const teamMembers = await findTeamMembers(team, context.github);
     const diff = composition(teamMembers, config.maintainers);
 
-    if (diff.alumni.length > 0) {
-      const opts = {
-        name: 'alumni',
-        owner: {
-          login: 'exercism'
-        }
-      };
-      const alumni = await findTeam(opts, context.github);
-      diff.alumni.forEach(username => {
-        return context.github.orgs.addTeamMembership({id: alumni.id, role: 'member', username});
-      });
-    }
-    diff.additions.forEach(username => {
+    let orgName = 'exercism'
+    const alumniOpts = {
+      name: 'alumni',
+      owner: {
+        login: orgName
+      }
+    };
+    const alumni = await findTeam(alumniOpts, context.github);
+    diff.additions.forEach(async (username) => {
+      // Remove user from alumni team if they get added to a new repo team to maintain
+      let teams = await getTeamsForUser({ login: orgName, userLogin: [username] }, context.github)
+      if (teams.map(t => t.node.name).includes("alumni")) {
+        context.github.orgs.removeTeamMembership({id: alumni.id, username});
+      }
       return context.github.orgs.addTeamMembership({id: team.id, role: 'member', username});
     });
     diff.deletions.forEach(username => {
       context.github.orgs.removeTeamMembership({id: team.id, username});
     });
+    if (diff.alumni.length > 0) {
+      diff.alumni.forEach(async (username) => {
+        // Only add user to alumni team when they are not maintaining another project
+        let teams = await getTeamsForUser({ login: orgName, userLogin: [username] }, context.github)
+        if (teams.filter(t => t.node.name !== "alumni").length === 0) {
+          return context.github.orgs.addTeamMembership({id: alumni.id, role: 'member', username});
+        }
+      });
+    }
+  }
+
+  async function getTeamsForUser(variables, github) {
+    const query = `
+      query($login: String!, $userLogin: [String!]) {
+        organization(login: $login) {
+          login
+          teams(first: 100, userLogins: $userLogin) {
+            totalCount
+            edges {
+              node {
+                name
+              }
+            }
+          }
+        }
+      }
+    `
+    const resource = await github.query(query, variables)
+    return resource.organization.teams.edges
   }
 
   async function findTeamMembers(team, github) {
